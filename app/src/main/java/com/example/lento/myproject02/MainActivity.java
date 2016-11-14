@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final GPSTracker mGPS = new GPSTracker(this);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -54,7 +55,22 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        FloatingActionButton gpsButton = (FloatingActionButton) findViewById(R.id.gps);
+        gpsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String latitude = String.valueOf(mGPS.getLatitude());
+                String longitude = String.valueOf(mGPS.getLongitude());
+                Log.d(DEBUG_TAG, "GPS Coordinates: " + latitude + ", " + longitude);
+
+                Snackbar.make(view, "Latitude:" + latitude + ", Longitude:" + longitude, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
+
 
     // Uses AsyncTask to create a task away from the main UI thread. This task takes a
     // URL string and uses it to create an HttpUrlConnection. Once the connection
@@ -78,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             //textView.setText(result);
             Log.d(DEBUG_TAG, "onPostExecute: " + result);
+
         }
     }
 
@@ -100,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             // Starts the query
             conn.connect();
             int response = conn.getResponseCode();
+
             Log.d(DEBUG_TAG, "The response is: " + response);
             is = conn.getInputStream();
             return readIt(is, len);
